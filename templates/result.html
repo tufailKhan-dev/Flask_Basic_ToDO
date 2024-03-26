@@ -24,7 +24,7 @@
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
         <h2>
-            {{message}}
+             {{name}} {{message}}
         </h2>
 
         <input type="text" name="inputdata" id="inputdata" /><br>
@@ -33,20 +33,36 @@
         <div class="display" id="display">
          
         </div><br>
-        <button value="submit" onclick=clear()>clear</button>
+        <button value="submit" onclick=clr()>clear</button>
         <br>
-        <a href ="/">logout</a>
+        <a href ="/logout">logout</a>
 
         <script>
             const data = document.getElementById("inputdata")
             let showdata = document.getElementById("display")
+            
             const show = () => {
                 let userdata = data.value
-                showdata.innerText += userdata + "\n"
+                arraydata.push(userdata)
+                arraydata.forEach((number) => {
+                    
+
+                    showdata.innerHTML += `<li>${number}</li> <button value="submit" onclick = dlt(this)>delete</button><button value="submit" onclick = edit() >edit</button>` + "\n"  
+                    
+
+                });
+                console.log(arraydata)
 
             }
-            const clear = () => {
+            const clr = () => {
                 showdata.innerHTML = "";
+                arraydata.length = 0 ;
+                
+            }
+
+            const dlt = (data)=> {
+                arraydata.pop()
+                data.remove()
             }
         </script>
     </body>

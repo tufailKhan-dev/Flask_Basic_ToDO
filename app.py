@@ -11,9 +11,6 @@
 
 """
 
-from flask import Flask, redirect, render_template, request, url_for
-
-app = Flask(__name__)
 
 
 # @app.route("/")
@@ -56,23 +53,46 @@ app = Flask(__name__)
     
 #     return redirect(url_for(res,score=total_score))
 
+from flask import Flask, redirect, render_template, request, url_for, session
+from datetime import timedelta
+app = Flask(__name__)
+app.secret_key = "aslkalsd"
+app.permanent_session_lifetime = timedelta(minutes=2)
+
+
 @app.route("/")
 def index():
     return render_template("index.html")
 
 
-@app.route("/submit", methods = ["GET","POST"])
-def submit():
+@app.route("/login", methods = ["GET","POST"])
+def login():
     if request.method == 'POST':
         name = request.form["username"]
         password = request.form["password"]
+        session.permanent = True
+        
         if name == "admin" and password == "1234":
-            return render_template("result.html", message="U r logging")
+            session["name"] = name
+            return redirect(url_for("result"))
         else:
-            re = "index"
+            if "name" in session:
+                return redirect(url_for("result"))
             return render_template("index.html", message="username and password is incorrect")
     else:
         return render_template("index.html")
+@app.route("/result")
+def result():
+    if "name" in session:
+        name = session["name"]
+        return render_template("result.html", name=name)
+    else:
+        return redirect(url_for("login"))
+@app.route("/logout")
+def logout():
+    session.pop("name", None)
+    return redirect(url_for("login"))
+
 
 if __name__ == "__main__":
     app.run(debug=True)
