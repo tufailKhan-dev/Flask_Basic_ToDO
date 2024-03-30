@@ -64,34 +64,24 @@ app.permanent_session_lifetime = timedelta(minutes=2)
 def index():
     return render_template("index.html")
 
-
-@app.route("/login", methods = ["GET","POST"])
+@app.route("/login",methods= ["POST"])
 def login():
-    if request.method == 'POST':
-        name = request.form["username"]
-        password = request.form["password"]
-        session.permanent = True
-        
-        if name == "admin" and password == "1234":
-            session["name"] = name
-            return redirect(url_for("result"))
-        else:
-            if "name" in session:
-                return redirect(url_for("result"))
-            return render_template("index.html", message="username and password is incorrect")
-    else:
-        return render_template("index.html")
-@app.route("/result")
-def result():
-    if "name" in session:
-        name = session["name"]
-        return render_template("result.html", name=name)
-    else:
-        return redirect(url_for("login"))
+    if request.method == "POST":
+        name = request.form.get("username")
+        session['name'] = name
+        return render_template("result.html",name=name)
+    return redirect(url_for("index"))
+
 @app.route("/logout")
 def logout():
-    session.pop("name", None)
-    return redirect(url_for("login"))
+    session.pop('name')
+    return redirect(url_for("index"))
+
+@app.route("/result")
+def result():
+    if session['name'] in session:
+        return redirect(url_for("login"))
+    return render_template("index.html")
 
 
 if __name__ == "__main__":

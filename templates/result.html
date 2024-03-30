@@ -11,59 +11,13 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="">
-        <style>
-            .display{
-                height:200px;
-                width:200px;
-                background-color:pink;
-            }
-        </style>
+        
     </head>
     <body>
         <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
-        <h2>
-             {{name}} {{message}}
-        </h2>
-
-        <input type="text" name="inputdata" id="inputdata" /><br>
-        <button value="submit" onclick=show()>submit</button>
-        <br>
-        <div class="display" id="display">
-         
-        </div><br>
-        <button value="submit" onclick=clr()>clear</button>
-        <br>
-        <a href ="/logout">logout</a>
-
-        <script>
-            const data = document.getElementById("inputdata")
-            let showdata = document.getElementById("display")
-            
-            const show = () => {
-                let userdata = data.value
-                arraydata.push(userdata)
-                arraydata.forEach((number) => {
-                    
-
-                    showdata.innerHTML += `<li>${number}</li> <button value="submit" onclick = dlt(this)>delete</button><button value="submit" onclick = edit() >edit</button>` + "\n"  
-                    
-
-                });
-                console.log(arraydata)
-
-            }
-            const clr = () => {
-                showdata.innerHTML = "";
-                arraydata.length = 0 ;
-                
-            }
-
-            const dlt = (data)=> {
-                arraydata.pop()
-                data.remove()
-            }
-        </script>
+        <h1>{{name}}</h1>
+        <a href="/logout">Logout</a>
     </body>
 </html>
