@@ -54,10 +54,10 @@
 #     return redirect(url_for(res,score=total_score))
 
 from flask import Flask, redirect, render_template, request, url_for, session
-from datetime import timedelta
+from datetime import timedelta,datetime
 app = Flask(__name__)
 app.secret_key = "aslkalsd"
-app.permanent_session_lifetime = timedelta(minutes=2)
+# app.permanent_session_lifetime = timedelta(minutes=2)
 
 
 @app.route("/")
@@ -65,27 +65,53 @@ def index():
     return render_template("index.html")
 
 
+
+@app.before_request
+def update_last_activity():
+    session.permanent = True
+    app.permanent_session_lifetime = timedelta(minutes=2)  # Set session lifetime
+    session['last_activity'] = datetime.now()
+
+
+
+def is_user_inactive():
+    last_activity = session['last_activity']
+    if last_activity:
+        inactive_duration = datetime.now() - last_activity
+        if inactive_duration > timedelta(minutes=2):
+            return True
+    return False
+
+
+@app.route("/check_activity")
+def check_activity():
+    if is_user_inactive():
+        return redirect(url_for("logout"))
+
+
+
 @app.route("/login", methods = ["GET","POST"])
 def login():
     if request.method == 'POST':
         name = request.form["username"]
-        password = request.form["password"]
-        session.permanent = True
-        
-        if name == "admin" and password == "1234":
-            session["name"] = name
-            return redirect(url_for("result"))
-        else:
-            if "name" in session:
-                return redirect(url_for("result"))
-            return render_template("index.html", message="username and password is incorrect")
+        session['name'] = name
+        return redirect(url_for("result"))
     else:
         return render_template("index.html")
-@app.route("/result")
+
+
+
+@app.route("/result", methods=["POST","GET"])
 def result():
+    data = []
     if "name" in session:
         name = session["name"]
-        return render_template("result.html", name=name)
+        if request.method == "POST":
+            d = request.form.get("inputdata")
+            data.append(d)
+        dat = { "data" : data,
+               "name" : name}
+        return render_template("result.html", dat = dat)
     else:
         return redirect(url_for("login"))
 @app.route("/logout")

@@ -16,6 +16,8 @@
                 height:200px;
                 width:200px;
                 background-color:pink;
+                padding: 5px;
+                overflow:hidden;
             }
         </style>
     </head>
@@ -24,45 +26,28 @@
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
         <h2>
-             {{name}} {{message}}
+             {{dat.name}}
         </h2>
-
+        <form action="/result" method="post">
         <input type="text" name="inputdata" id="inputdata" /><br>
         <button value="submit" onclick=show()>submit</button>
+        </form>
         <br>
         <div class="display" id="display">
-         
+            {% for i in dat.data %}
+            <p>{{ i }}</p> 
+          
+         {% endfor %}
         </div><br>
         <button value="submit" onclick=clr()>clear</button>
         <br>
         <a href ="/logout">logout</a>
 
         <script>
-            const data = document.getElementById("inputdata")
-            let showdata = document.getElementById("display")
-            
-            const show = () => {
-                let userdata = data.value
-                arraydata.push(userdata)
-                arraydata.forEach((number) => {
-                    
-
-                    showdata.innerHTML += `<li>${number}</li> <button value="submit" onclick = dlt(this)>delete</button><button value="submit" onclick = edit() >edit</button>` + "\n"  
-                    
-
-                });
-                console.log(arraydata)
-
-            }
+            const inputdata = document.getElementById("inputdata");
+            const display = document.getElementById("display");
             const clr = () => {
-                showdata.innerHTML = "";
-                arraydata.length = 0 ;
-                
-            }
-
-            const dlt = (data)=> {
-                arraydata.pop()
-                data.remove()
+                display.innerText = ""
             }
         </script>
     </body>
