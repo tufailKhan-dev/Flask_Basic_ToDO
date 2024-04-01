@@ -11,44 +11,13 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="">
-        <style>
-            .display{
-                height:200px;
-                width:200px;
-                background-color:pink;
-                padding: 5px;
-                overflow:hidden;
-            }
-        </style>
+        
     </head>
     <body>
         <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
-        <h2>
-             {{dat.name}}
-        </h2>
-        <form action="/result" method="post">
-        <input type="text" name="inputdata" id="inputdata" /><br>
-        <button value="submit" onclick=show()>submit</button>
-        </form>
-        <br>
-        <div class="display" id="display">
-            {% for i in dat.data %}
-            <p>{{ i }}</p> 
-          
-         {% endfor %}
-        </div><br>
-        <button value="submit" onclick=clr()>clear</button>
-        <br>
-        <a href ="/logout">logout</a>
-
-        <script>
-            const inputdata = document.getElementById("inputdata");
-            const display = document.getElementById("display");
-            const clr = () => {
-                display.innerText = ""
-            }
-        </script>
+        <h1>{{name}}</h1>
+        <a href="/logout">Logout</a>
     </body>
 </html>
