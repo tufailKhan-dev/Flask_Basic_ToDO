@@ -55,34 +55,50 @@
 
 from flask import Flask, redirect, render_template, request, url_for, session
 from datetime import timedelta
-app = Flask(__name__)
+from flask_sqlalchemy import SQLAlchemy
+app = Flask(__name__,template_folder="templates")
+#importing and configuring sqlalchemy
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
+app.config['SQLALCHEMY_TRANK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
+with app.app_context(): 
+    db.create_all()
+print("connected")
+
+
 app.secret_key = "aslkalsd"
-app.permanent_session_lifetime = timedelta(minutes=2)
-
-
+# registration page
 @app.route("/")
 def index():
     return render_template("index.html")
 
+
+#authentication
 @app.route("/login",methods= ["POST"])
 def login():
     if request.method == "POST":
         name = request.form.get("username")
         session['name'] = name
-        return render_template("result.html",name=name)
+        return redirect(url_for("result",user=name))
     return redirect(url_for("index"))
 
+#logout
 @app.route("/logout")
 def logout():
-    session.pop('name')
+    session.pop('name',None)
     return redirect(url_for("index"))
 
-@app.route("/result")
-def result():
-    if session['name'] in session:
-        return redirect(url_for("login"))
+
+#main page
+@app.route("/<user>")
+def result(user):
+    if 'name' in session:
+        name = session['name']
+        return render_template("result.html", name=name)
     return render_template("index.html")
 
 
+
 if __name__ == "__main__":
+   
     app.run(debug=True)
