@@ -55,22 +55,34 @@
 
 from flask import Flask, redirect, render_template, request, url_for, session
 from datetime import timedelta
+
+from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+
 app = Flask(__name__,template_folder="templates")
-#importing and configuring sqlalchemy
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
 app.config['SQLALCHEMY_TRANK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
-with app.app_context(): 
-    db.create_all()
-print("connected")
+class Todo(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String(100))
+    userdata = db.Column(db.String(100))
+
+    def __init__(self,name,userdata):
+        self.name = name
+        self.userdata = userdata
+
+
 
 
 app.secret_key = "aslkalsd"
 # registration page
 @app.route("/")
 def index():
-    return render_template("index.html")
+    
+        
+    todo_data = Todo.query.all()
+    return render_template("index.html", todos = todo_data)
 
 
 #authentication
@@ -100,5 +112,7 @@ def result(user):
 
 
 if __name__ == "__main__":
+    with app.app_context():
+        db.create_all()
+        app.run(debug=True)
    
-    app.run(debug=True)
