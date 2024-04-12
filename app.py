@@ -69,14 +69,26 @@ app.secret_key = "aslkalsd"
 def index():    
     return render_template("index.html")
 
+#adding function
+@app.route("/add",methods = ["POST"])
+def AddData():
+    title = request.form.get("writetodo")
+
+    
+
+
 
 #authentication
 @app.route("/login",methods= ["POST"])
 def login():
     if request.method == "POST":
         name = request.form.get("username")
-        session['name'] = name
-        return redirect(url_for("result", user=name))
+        user_exist = db.session.query(Todo.query.filter(Todo.name==name).exists()).scalar()
+        if user_exist:
+            session['name'] = name
+            return redirect(url_for("result", user=name))
+        else:
+            return render_template("index.html",message=f"{name} not exist")
     return redirect(url_for("index"))
 
 #logout
