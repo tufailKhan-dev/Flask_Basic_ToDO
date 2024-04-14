@@ -53,10 +53,10 @@
     
 #     return redirect(url_for(res,score=total_score))
 
-from flask import Flask, redirect, render_template, request, url_for, session
+from flask import Flask, flash, redirect, render_template, request, url_for, session
 from datetime import timedelta
 from flask import Flask
-from models.signup import db,Todo
+from models.signup import db,Signup
 app = Flask(__name__,template_folder="templates",static_folder="static")
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
 app.config['SQLALCHEMY_TRANK_MODIFICATIONS'] = False
@@ -83,12 +83,13 @@ def AddData():
 def login():
     if request.method == "POST":
         name = request.form.get("username")
-        user_exist = db.session.query(Todo.query.filter(Todo.name==name).exists()).scalar()
+        user_exist = db.session.query(Signup.query.filter(Signup.name==name).exists()).scalar()
         if user_exist:
             session['name'] = name
             return redirect(url_for("result", user=name))
         else:
-            return render_template("index.html",message=f"{name} not exist")
+            flash('invalid user', 'error')
+            return redirect(url_for("index"))
     return redirect(url_for("index"))
 
 #logout
@@ -110,7 +111,6 @@ def result(user):
 
 if __name__ == "__main__":
     with app.app_context():
-        
         db.create_all()
         app.run(debug=True)
    
