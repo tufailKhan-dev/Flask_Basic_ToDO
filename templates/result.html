@@ -17,13 +17,14 @@
 
                 <div class="main">
                     <div class="text-center">
-                        <form action="/add", method="post">
-                        <input type="text" name="writetodo" id="writetodo" placeholder="write your task" /><br>
+                        <form action="/todos", method="post">
+                        <input type="text" name="writetodo" id="writetodo" placeholder="write your task" required/><br>
                         
 
                         </form>
                     </div>
                     <div class="displaytodo">
+                        <div id="todos-list"></div>
     
                     </div>
 
@@ -31,5 +32,7 @@
 
             </div>
         </div>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="static/app.js"></script>
     </body>
 </html>
